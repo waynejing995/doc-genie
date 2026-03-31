@@ -10,19 +10,28 @@ description: >
 
 Perform deeper analysis to find insights that automated rules cannot detect.
 
+## Agent Integration
+
+This skill consumes outputs from specialized agents:
+
+| Agent | Analysis Type | Output |
+|-------|--------------|--------|
+| conflict-agent | Parameter conflicts, interface mismatches | Conflict list |
+| pattern-agent | Design patterns, anti-patterns | Pattern list |
+
 ## Phase 1: Implicit Relationship Discovery
 
 Analyze each component pair and ask:
 
 1. **Semantic Dependency**: Does A's concept logically require B?
    - Example: "User Authentication" implicitly depends on "User Database"
-   
+
 2. **Data Transformation**: Does A output X and B input Y where X/Y are same data different form?
    - Example: A outputs "XML", B inputs "JSON" — same data, needs transformer
-   
+
 3. **Temporal Ordering**: Must A happen before B even if not stated?
    - Example: "Validate Input" must before "Process Payment"
-   
+
 4. **Constraint Propagation**: If A constrains X and B uses X, A indirectly constrains B?
    - Example: A says "max 100 items", B processes items — B is indirectly constrained
 
@@ -32,13 +41,13 @@ Scan all components for:
 
 1. **Parameter Conflicts**: Same parameter defined differently
    - Look for: timeout values, formats, limits, naming conventions
-   
+
 2. **Interface Mismatches**: Output format ≠ expected input format
    - Look for: data types, encoding, structure differences
-   
+
 3. **Constraint Contradictions**: Two rules that cannot both be true
    - Look for: "must be X" vs "must not be X"
-   
+
 4. **Terminology Inconsistency**: Same concept, different names
    - Look for: "user_id" vs "userId" vs "uid"
 

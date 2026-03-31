@@ -10,6 +10,15 @@ description: >
 
 Analyze relationships between extracted black boxes.
 
+## Agent Integration
+
+This skill consumes outputs from specialized agents:
+
+| Agent | Relationship Types | Output |
+|-------|-------------------|--------|
+| data-flow-agent | data_flow, transform, aggregate | Flow graph |
+| dependency-agent | dependency, interface, sequence | Dependency graph |
+
 ## Relationship Types
 
 | Category | Type | Symbol | Description |
@@ -32,12 +41,12 @@ Analyze relationships between extracted black boxes.
 
 ## Detection Methods
 
-### Layer 1: Structural (automated)
-- Import/dependency analysis (ast-grep, pyan3)
+### Layer 1: Structural (automated via tree-sitter)
+- Import/dependency analysis
 - Function call detection
 - Inheritance mapping
 
-### Layer 2: Pattern-based (automated)
+### Layer 2: Pattern-based (automated via CLI)
 - Input/Output name matching
 - Text reference detection (A mentions B)
 - Regex pattern matching

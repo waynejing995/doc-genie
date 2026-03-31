@@ -1,5 +1,8 @@
 ---
+name: result-reviewer
 description: Reviews and validates agent results before final output
+model: inherit
+color: blue
 capabilities:
   - Validate output format
   - Check confidence thresholds

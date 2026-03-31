@@ -10,6 +10,19 @@ description: >
 
 Create structured reports from analysis results.
 
+## CLI Integration
+
+```bash
+# Generate markdown report
+uv run genie report --format markdown --output analysis-report.md
+
+# Generate HTML report
+uv run genie report --format html --output report.html
+
+# Generate DOT graph
+uv run genie report --format dot --output graph.dot
+```
+
 ## Output Formats
 
 | Format | Use Case | Tool |
@@ -18,6 +31,14 @@ Create structured reports from analysis results.
 | Table | Quick summary | Direct generation |
 | HTML (vis.js CDN) | Interactive exploration | Template-based |
 | DOT (Graphviz) | High-quality diagrams | networkx export |
+
+## Storage Integration
+
+Reports read from `.genie/` directory:
+- `boxes.json`: Extracted black boxes
+- `relationships.json`: Detected relationships
+- `patterns.json`: Identified patterns
+- `review.json`: Review status
 
 ## Report Structure
 

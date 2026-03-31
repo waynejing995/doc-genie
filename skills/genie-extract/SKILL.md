@@ -2,7 +2,7 @@
 name: genie-extract
 description: >
   Extract document sections as black boxes with inputs, outputs, and attributes.
-  Supports PDF, DOCX, Markdown, and code files (Python, JS, TS, Go, Java).
+  Supports PDF, DOCX, Markdown, and code files (Python, JS, TS, C via tree-sitter).
   Use when analyzing specs, parsing requirements, or defining system components.
   Triggers: extract, parse, analyze document, find sections, define components.
 ---
@@ -16,9 +16,39 @@ Extract structured black boxes from documents and code files.
 | Type | Formats | Tool |
 |------|---------|------|
 | Document | PDF, DOCX, Markdown | pdfplumber, python-docx, markdown-it-py |
-| Code | Python, JS, TS, Go, Java | ast-grep-py |
+| Code | Python, JS, TS, C | tree-sitter |
 | API Spec | OpenAPI, GraphQL | YAML/JSON parser |
 | Config | YAML, JSON, TOML | PyYAML |
+
+## Depth Profiles
+
+| Depth | Abstraction Level | Box Size | Use Case |
+|-------|------------------|----------|----------|
+| quick | module/chapter | ~500 chars | High-level overview |
+| medium | function/paragraph | ~100 chars | Standard analysis |
+| deep | statement/sentence | ~30 chars | Detailed inspection |
+
+## CLI Integration
+
+Run extraction via CLI for fast parsing:
+
+```bash
+# Single file
+uv run genie extract path/to/file.py --output json --depth medium
+
+# Directory
+uv run genie extract path/to/docs/ --depth deep
+
+# Initialize project config
+uv run genie init
+```
+
+## Agent Integration
+
+For large-scale extraction, use chunk-coordinator agent to:
+1. Split files into chunks based on depth profile
+2. Dispatch extract-worker agents for parallel processing
+3. Aggregate and deduplicate results
 
 ## Extraction Process
 

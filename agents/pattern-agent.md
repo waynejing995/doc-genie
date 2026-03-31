@@ -1,5 +1,8 @@
 ---
+name: pattern-agent
 description: Detects recurring patterns across black boxes
+model: inherit
+color: magenta
 capabilities:
   - Find similar structures
   - Detect repeated logic

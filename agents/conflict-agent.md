@@ -1,5 +1,8 @@
 ---
+name: conflict-agent
 description: Detects conflicts and incompatibilities between black boxes
+model: inherit
+color: red
 capabilities:
   - Find naming conflicts
   - Detect semantic contradictions

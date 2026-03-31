@@ -1,5 +1,8 @@
 ---
+name: data-flow-agent
 description: Detects data flow relationships between black boxes
+model: inherit
+color: cyan
 capabilities:
   - Identify input/output variables
   - Trace data through function calls

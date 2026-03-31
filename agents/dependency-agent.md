@@ -1,5 +1,8 @@
 ---
+name: dependency-agent
 description: Detects dependency relationships between black boxes
+model: inherit
+color: yellow
 capabilities:
   - Parse import statements
   - Identify function/class references

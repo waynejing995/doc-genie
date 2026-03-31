@@ -1,5 +1,8 @@
 ---
+name: chunk-coordinator
 description: Coordinates parallel extraction workers and aggregates results
+model: inherit
+color: blue
 capabilities:
   - Split input files into chunks for parallel processing
   - Dispatch extract-worker agents

@@ -1,5 +1,8 @@
 ---
+name: extract-worker
 description: Extracts black boxes from a single chunk (file or section)
+model: inherit
+color: green
 capabilities:
   - Parse code using tree-sitter
   - Parse documents using pdfplumber/python-docx
