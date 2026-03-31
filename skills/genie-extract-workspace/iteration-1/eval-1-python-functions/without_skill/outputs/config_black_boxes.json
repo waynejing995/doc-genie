@@ -1,0 +1,82 @@
+{
+  "file": "lib/config.py",
+  "description": "Project configuration management",
+  "imports": [
+    "yaml",
+    "pathlib.Path",
+    "typing.Any"
+  ],
+  "constants": [
+    {
+      "name": "DEFAULT_CONFIG",
+      "type": "dict",
+      "description": "Default configuration dictionary containing version, depth settings, box size thresholds, depth profiles, file types, exclude patterns, and output settings"
+    }
+  ],
+  "classes": [
+    {
+      "name": "GenieConfig",
+      "description": "Project-level configuration for doc-genie",
+      "methods": [
+        {
+          "name": "__init__",
+          "signature": "__init__(self, project_root: str = '.')",
+          "description": "Initialize the configuration with a project root path"
+        },
+        {
+          "name": "_load_config",
+          "signature": "_load_config(self) -> dict[str, Any]",
+          "description": "Load configuration from file or return defaults",
+          "is_private": true
+        },
+        {
+          "name": "_merge_config",
+          "signature": "_merge_config(self, default: dict, user: dict) -> dict",
+          "description": "Deep merge user config into defaults",
+          "is_private": true
+        },
+        {
+          "name": "depth",
+          "signature": "@property depth(self) -> str",
+          "description": "Current extraction depth"
+        },
+        {
+          "name": "depth_profiles",
+          "signature": "@property depth_profiles(self) -> dict",
+          "description": "Depth profile settings"
+        },
+        {
+          "name": "box_size_thresholds",
+          "signature": "@property box_size_thresholds(self) -> dict",
+          "description": "Box size thresholds by depth"
+        },
+        {
+          "name": "file_types",
+          "signature": "@property file_types(self) -> list[str]",
+          "description": "Supported file types"
+        },
+        {
+          "name": "exclude_patterns",
+          "signature": "@property exclude_patterns(self) -> list[str]",
+          "description": "Patterns to exclude"
+        },
+        {
+          "name": "should_process_file",
+          "signature": "should_process_file(self, filepath: str) -> bool",
+          "description": "Check if file should be processed based on config"
+        },
+        {
+          "name": "get_depth_profile",
+          "signature": "get_depth_profile(self, depth: str | None = None) -> dict",
+          "description": "Get settings for a specific depth level"
+        },
+        {
+          "name": "get_box_threshold",
+          "signature": "get_box_threshold(self, depth: str | None = None) -> dict",
+          "description": "Get box size threshold for a specific depth"
+        }
+      ]
+    }
+  ],
+  "functions": []
+}

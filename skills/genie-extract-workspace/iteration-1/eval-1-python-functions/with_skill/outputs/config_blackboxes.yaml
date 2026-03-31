@@ -1,0 +1,396 @@
+blackboxes:
+  - id: "bb-config-001"
+    name: "DEFAULT_CONFIG"
+    source:
+      type: "code"
+      file: "lib/config.py"
+      section: "Module-level constant"
+      line_range: [8, 39]
+
+    inputs: []
+
+    outputs:
+      - name: "default_settings"
+        type: "data"
+        format: "dict"
+        description: "Default configuration dictionary containing version, depth settings, box_size_thresholds, depth_profiles, file_types, exclude_patterns, and output settings"
+
+    attributes:
+      constraints:
+        - "Immutable constant at module level"
+        - "Used as fallback when user config is not present"
+      dependencies: []
+      properties:
+        type: "constant"
+        status: "active"
+
+  - id: "bb-config-002"
+    name: "GenieConfig.__init__"
+    source:
+      type: "code"
+      file: "lib/config.py"
+      section: "class GenieConfig"
+      line_range: [45, 48]
+
+    inputs:
+      - name: "project_root"
+        type: "parameter"
+        required: false
+        format: "str"
+        description: "Path to the project root directory, defaults to current directory"
+
+    outputs:
+      - name: "self.project_root"
+        type: "data"
+        format: "Path"
+        description: "Path object representing the project root"
+      - name: "self.config_file"
+        type: "data"
+        format: "Path"
+        description: "Path to the configuration file (.genie/config.yaml)"
+      - name: "self._config"
+        type: "data"
+        format: "dict"
+        description: "Loaded configuration dictionary"
+
+    attributes:
+      constraints:
+        - "Initializes configuration on object creation"
+      dependencies:
+        - "bb-config-003"
+      properties:
+        owner: "config-module"
+        status: "active"
+
+  - id: "bb-config-003"
+    name: "GenieConfig._load_config"
+    source:
+      type: "code"
+      file: "lib/config.py"
+      section: "class GenieConfig"
+      line_range: [50, 56]
+
+    inputs:
+      - name: "self.config_file"
+        type: "data"
+        required: true
+        format: "Path"
+        description: "Path to the configuration file to load"
+
+    outputs:
+      - name: "config_dict"
+        type: "data"
+        format: "dict"
+        description: "Loaded and merged configuration dictionary"
+
+    attributes:
+      constraints:
+        - "Returns DEFAULT_CONFIG copy if config file does not exist"
+        - "Merges user config with defaults using _merge_config"
+      dependencies:
+        - "bb-config-004"
+        - "bb-config-001"
+      properties:
+        visibility: "private"
+        status: "active"
+
+  - id: "bb-config-004"
+    name: "GenieConfig._merge_config"
+    source:
+      type: "code"
+      file: "lib/config.py"
+      section: "class GenieConfig"
+      line_range: [58, 70]
+
+    inputs:
+      - name: "default"
+        type: "parameter"
+        required: true
+        format: "dict"
+        description: "Default configuration dictionary"
+      - name: "user"
+        type: "parameter"
+        required: true
+        format: "dict"
+        description: "User-provided configuration dictionary"
+
+    outputs:
+      - name: "merged_dict"
+        type: "data"
+        format: "dict"
+        description: "Deep-merged configuration dictionary with user values overriding defaults"
+
+    attributes:
+      constraints:
+        - "Performs deep merge for nested dictionaries"
+        - "Non-dict values from user config completely replace defaults"
+      dependencies: []
+      properties:
+        visibility: "private"
+        status: "active"
+
+  - id: "bb-config-005"
+    name: "GenieConfig.depth"
+    source:
+      type: "code"
+      file: "lib/config.py"
+      section: "class GenieConfig"
+      line_range: [72, 75]
+
+    inputs:
+      - name: "self._config"
+        type: "data"
+        required: true
+        format: "dict"
+        description: "Internal configuration dictionary"
+
+    outputs:
+      - name: "depth_value"
+        type: "data"
+        format: "str"
+        description: "Current extraction depth (quick, medium, or deep)"
+
+    attributes:
+      constraints:
+        - "Returns 'medium' if depth not set"
+      dependencies: []
+      properties:
+        type: "property"
+        status: "active"
+
+  - id: "bb-config-006"
+    name: "GenieConfig.depth_profiles"
+    source:
+      type: "code"
+      file: "lib/config.py"
+      section: "class GenieConfig"
+      line_range: [77, 80]
+
+    inputs:
+      - name: "self._config"
+        type: "data"
+        required: true
+        format: "dict"
+        description: "Internal configuration dictionary"
+
+    outputs:
+      - name: "profiles_dict"
+        type: "data"
+        format: "dict"
+        description: "Depth profile settings for quick, medium, deep"
+
+    attributes:
+      constraints:
+        - "Returns empty dict if not configured"
+      dependencies: []
+      properties:
+        type: "property"
+        status: "active"
+
+  - id: "bb-config-007"
+    name: "GenieConfig.box_size_thresholds"
+    source:
+      type: "code"
+      file: "lib/config.py"
+      section: "class GenieConfig"
+      line_range: [82, 85]
+
+    inputs:
+      - name: "self._config"
+        type: "data"
+        required: true
+        format: "dict"
+        description: "Internal configuration dictionary"
+
+    outputs:
+      - name: "thresholds_dict"
+        type: "data"
+        format: "dict"
+        description: "Box size thresholds by depth level"
+
+    attributes:
+      constraints:
+        - "Returns empty dict if not configured"
+      dependencies: []
+      properties:
+        type: "property"
+        status: "active"
+
+  - id: "bb-config-008"
+    name: "GenieConfig.file_types"
+    source:
+      type: "code"
+      file: "lib/config.py"
+      section: "class GenieConfig"
+      line_range: [87, 90]
+
+    inputs:
+      - name: "self._config"
+        type: "data"
+        required: true
+        format: "dict"
+        description: "Internal configuration dictionary"
+
+    outputs:
+      - name: "file_types_list"
+        type: "data"
+        format: "list[str]"
+        description: "List of supported file extensions"
+
+    attributes:
+      constraints:
+        - "Returns empty list if not configured"
+      dependencies: []
+      properties:
+        type: "property"
+        status: "active"
+
+  - id: "bb-config-009"
+    name: "GenieConfig.exclude_patterns"
+    source:
+      type: "code"
+      file: "lib/config.py"
+      section: "class GenieConfig"
+      line_range: [92, 95]
+
+    inputs:
+      - name: "self._config"
+        type: "data"
+        required: true
+        format: "dict"
+        description: "Internal configuration dictionary"
+
+    outputs:
+      - name: "patterns_list"
+        type: "data"
+        format: "list[str]"
+        description: "List of glob patterns for files to exclude"
+
+    attributes:
+      constraints:
+        - "Returns empty list if not configured"
+      dependencies: []
+      properties:
+        type: "property"
+        status: "active"
+
+  - id: "bb-config-010"
+    name: "GenieConfig.should_process_file"
+    source:
+      type: "code"
+      file: "lib/config.py"
+      section: "class GenieConfig"
+      line_range: [97, 110]
+
+    inputs:
+      - name: "filepath"
+        type: "parameter"
+        required: true
+        format: "str"
+        description: "Path to the file to check"
+      - name: "self.file_types"
+        type: "data"
+        required: true
+        format: "list[str]"
+        description: "Supported file extensions from config"
+      - name: "self.exclude_patterns"
+        type: "data"
+        required: true
+        format: "list[str]"
+        description: "Exclusion patterns from config"
+
+    outputs:
+      - name: "should_process"
+        type: "data"
+        format: "bool"
+        description: "True if file should be processed, False otherwise"
+
+    attributes:
+      constraints:
+        - "File suffix must match one of supported file types"
+        - "File path must not match any exclude pattern"
+      dependencies:
+        - "bb-config-008"
+        - "bb-config-009"
+      properties:
+        status: "active"
+
+  - id: "bb-config-011"
+    name: "GenieConfig.get_depth_profile"
+    source:
+      type: "code"
+      file: "lib/config.py"
+      section: "class GenieConfig"
+      line_range: [112, 115]
+
+    inputs:
+      - name: "depth"
+        type: "parameter"
+        required: false
+        format: "str | None"
+        description: "Depth level to get settings for, defaults to current depth"
+      - name: "self.depth"
+        type: "data"
+        required: true
+        format: "str"
+        description: "Current extraction depth"
+      - name: "self.depth_profiles"
+        type: "data"
+        required: true
+        format: "dict"
+        description: "Available depth profiles"
+
+    outputs:
+      - name: "profile_settings"
+        type: "data"
+        format: "dict"
+        description: "Settings for the specified depth level"
+
+    attributes:
+      constraints:
+        - "Returns 'medium' profile as fallback if depth not found"
+      dependencies:
+        - "bb-config-005"
+        - "bb-config-006"
+      properties:
+        status: "active"
+
+  - id: "bb-config-012"
+    name: "GenieConfig.get_box_threshold"
+    source:
+      type: "code"
+      file: "lib/config.py"
+      section: "class GenieConfig"
+      line_range: [117, 120]
+
+    inputs:
+      - name: "depth"
+        type: "parameter"
+        required: false
+        format: "str | None"
+        description: "Depth level to get threshold for, defaults to current depth"
+      - name: "self.depth"
+        type: "data"
+        required: true
+        format: "str"
+        description: "Current extraction depth"
+      - name: "self.box_size_thresholds"
+        type: "data"
+        required: true
+        format: "dict"
+        description: "Available box size thresholds"
+
+    outputs:
+      - name: "threshold_dict"
+        type: "data"
+        format: "dict"
+        description: "Box size threshold for specified depth (min_lines, min_chars)"
+
+    attributes:
+      constraints:
+        - "Returns 'medium' threshold as fallback if depth not found"
+      dependencies:
+        - "bb-config-005"
+        - "bb-config-007"
+      properties:
+        status: "active"

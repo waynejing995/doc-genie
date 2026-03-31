@@ -1,0 +1,28 @@
+{
+  "skill_name": "genie-relations",
+  "skill_path": "/Volumes/data/User/wayne/Code/doc-genie/skills/genie-relations",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Analyze the relationships between the functions in lib/config.py and lib/storage/genie_store.py. What dependencies exist between them?",
+      "expected_output": "Relationship map showing dependencies between config and storage modules",
+      "files": ["lib/config.py", "lib/storage/genie_store.py"],
+      "expectations": [
+        "Output identifies relationships between components",
+        "Relationships have types (dependency, data_flow, etc.)",
+        "Output includes confidence scores"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Map the data flow between the extractors in lib/extractors/. How do they relate to each other?",
+      "expected_output": "Data flow diagram showing extractor relationships",
+      "files": ["lib/extractors/tree_sitter_extractor.py", "lib/extractors/pdf_extractor.py", "lib/extractors/docx_extractor.py"],
+      "expectations": [
+        "Output shows relationships between extractors",
+        "Relationships are categorized by type",
+        "Output follows YAML format"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "eval_id": 1,
+  "eval_name": "config-storage-dependencies",
+  "prompt": "Analyze the relationships between the functions in lib/config.py and lib/storage/genie_store.py. What dependencies exist between them?",
+  "assertions": [
+    {"text": "Output identifies relationships between config and storage", "type": "presence"},
+    {"text": "Relationships have types (dependency, data_flow, etc.)", "type": "format"},
+    {"text": "Output includes confidence scores", "type": "completeness"},
+    {"text": "Output follows YAML format", "type": "format"}
+  ]
+}

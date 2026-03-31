@@ -1,0 +1,28 @@
+{
+  "skill_name": "genie-insights",
+  "skill_path": "/Volumes/data/User/wayne/Code/doc-genie/skills/genie-insights",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Look at the code in lib/extractors/ and find any patterns, conflicts, or implicit relationships between the different extractors.",
+      "expected_output": "Analysis with patterns, conflicts, and insights",
+      "files": ["lib/extractors/tree_sitter_extractor.py", "lib/extractors/pdf_extractor.py", "lib/extractors/docx_extractor.py", "lib/extractors/markdown_extractor.py"],
+      "expectations": [
+        "Output identifies design patterns in the code",
+        "Output detects any potential conflicts",
+        "Output suggests improvements or missing components"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Analyze lib/config.py and lib/storage/genie_store.py for any implicit relationships that aren't obvious from imports.",
+      "expected_output": "Deep insight analysis with implicit relationships",
+      "files": ["lib/config.py", "lib/storage/genie_store.py"],
+      "expectations": [
+        "Output finds semantic dependencies",
+        "Output identifies constraint propagation",
+        "Output has structured format with tables"
+      ]
+    }
+  ]
+}

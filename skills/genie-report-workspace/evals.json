@@ -1,0 +1,28 @@
+{
+  "skill_name": "genie-report",
+  "skill_path": "/Volumes/data/User/wayne/Code/doc-genie/skills/genie-report",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Generate a report about the doc-genie project structure based on the files in lib/. Include architecture diagram and component summary.",
+      "expected_output": "Markdown report with Mermaid diagrams and tables",
+      "files": ["lib/config.py", "lib/storage/genie_store.py", "lib/extractors/"],
+      "expectations": [
+        "Output includes executive summary",
+        "Output includes Mermaid architecture diagram",
+        "Output has component inventory table"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Create a visualization report showing the relationships between all extractors and the config system.",
+      "expected_output": "Report with diagrams and relationship matrix",
+      "files": ["lib/"],
+      "expectations": [
+        "Output has relationship matrix table",
+        "Output includes visualization/diagram",
+        "Output has statistics section"
+      ]
+    }
+  ]
+}

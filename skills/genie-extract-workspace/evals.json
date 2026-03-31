@@ -1,0 +1,39 @@
+{
+  "skill_name": "genie-extract",
+  "skill_path": "/Volumes/data/User/wayne/Code/doc-genie/skills/genie-extract",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Extract black boxes from the Python file at lib/config.py. I need to understand what functions and classes are defined there.",
+      "expected_output": "YAML formatted black boxes with functions and classes extracted from the config file",
+      "files": ["lib/config.py"],
+      "expectations": [
+        "Output includes extracted functions from the Python file",
+        "Output includes the GenieConfig class",
+        "Output follows YAML format with black boxes structure"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Parse the README.md file and extract its sections as black boxes. Tell me what the main components are.",
+      "expected_output": "Sections extracted with headings, content, and structure",
+      "files": ["README.md"],
+      "expectations": [
+        "Output includes sections from the markdown file",
+        "Sections have proper heading levels",
+        "Output follows the black box template format"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Extract the structure from tests/fixtures/sample.pdf - I want to see what sections it contains.",
+      "expected_output": "PDF sections with titles and content",
+      "files": ["tests/fixtures/sample.pdf"],
+      "expectations": [
+        "Output includes sections from the PDF",
+        "Sections have titles/headers detected",
+        "Output shows the document structure"
+      ]
+    }
+  ]
+}

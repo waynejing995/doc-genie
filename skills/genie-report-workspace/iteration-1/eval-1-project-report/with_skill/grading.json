@@ -1,0 +1,9 @@
+{
+  "expectations": [
+    {"text": "Output includes executive summary", "passed": true, "evidence": "Has '## Executive Summary' section with 2-3 sentence overview"},
+    {"text": "Output includes Mermaid architecture diagram", "passed": true, "evidence": "Has mermaid graph TD with Core/Extraction/Analysis/Storage layers"},
+    {"text": "Output has component inventory table", "passed": true, "evidence": "Component Inventory table with 10 components including ID, Name, Inputs, Outputs"},
+    {"text": "Output includes statistics section", "passed": true, "evidence": "Statistics table with Core Modules, Extractors, Pattern Detectors counts"}
+  ],
+  "summary": {"passed": 4, "failed": 0, "total": 4, "pass_rate": 1.0}
+}

@@ -1,0 +1,9 @@
+{
+  "expectations": [
+    {"text": "Output identifies relationships between config and storage", "passed": true, "evidence": "Found 6 relationships between GenieConfig and GenieStore"},
+    {"text": "Relationships have types (dependency, data_flow, etc.)", "passed": true, "evidence": "Types include: composition, interface, constraint, validation"},
+    {"text": "Output includes confidence scores", "passed": true, "evidence": "All relationships have confidence scores ranging from 0.65 to 0.9"},
+    {"text": "Output follows YAML format", "passed": true, "evidence": "Valid YAML with relationships array and summary section"}
+  ],
+  "summary": {"passed": 4, "failed": 0, "total": 4, "pass_rate": 1.0}
+}

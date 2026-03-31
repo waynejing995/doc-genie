@@ -1,0 +1,11 @@
+{
+  "eval_id": 1,
+  "eval_name": "extract-python-functions",
+  "prompt": "Extract black boxes from the Python file at lib/config.py. I need to understand what functions and classes are defined there.",
+  "assertions": [
+    {"text": "Output includes the GenieConfig class", "type": "presence"},
+    {"text": "Output includes extracted functions (depth, depth_profiles, etc.)", "type": "presence"},
+    {"text": "Output follows YAML format with black boxes structure", "type": "format"},
+    {"text": "Output includes source file information", "type": "completeness"}
+  ]
+}

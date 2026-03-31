@@ -1,0 +1,9 @@
+{
+  "expectations": [
+    {"text": "Output includes the GenieConfig class", "passed": true, "evidence": "Found GenieConfig class with methods listed"},
+    {"text": "Output includes extracted functions (depth, depth_profiles, etc.)", "passed": true, "evidence": "All property methods listed including depth, depth_profiles, box_size_thresholds"},
+    {"text": "Output follows YAML format with black boxes structure", "passed": false, "evidence": "Output is JSON format, not YAML. No blackboxes structure - just raw class info"},
+    {"text": "Output includes source file information", "passed": true, "evidence": "Has file path and line information for methods"}
+  ],
+  "summary": {"passed": 3, "failed": 1, "total": 4, "pass_rate": 0.75}
+}

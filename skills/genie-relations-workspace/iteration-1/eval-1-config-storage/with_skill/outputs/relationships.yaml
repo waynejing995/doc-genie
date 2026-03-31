@@ -1,0 +1,113 @@
+relationships:
+  - source: "lib/config.py::GenieConfig"
+    target: "lib/storage/genie_store.py::GenieStore"
+    type: "composition"
+    confidence: 0.85
+    evidence: "Both classes share the same `.genie/` directory structure. GenieConfig reads `.genie/config.yaml` while GenieStore manages data files (boxes.json, relationships.json, etc.) in the same directory hierarchy."
+    detection: "structural"
+
+  - source: "lib/config.py::GenieConfig.__init__"
+    target: "lib/storage/genie_store.py::GenieStore.__init__"
+    type: "interface"
+    confidence: 0.9
+    evidence: "Both constructors accept identical `project_root: str` parameter and initialize paths under `.genie/` directory. This consistent interface suggests they are designed to be used together."
+    detection: "structural"
+
+  - source: "lib/config.py::GenieConfig.depth_profiles"
+    target: "lib/storage/genie_store.py::GenieStore.save_boxes"
+    type: "constraint"
+    confidence: 0.75
+    evidence: "GenieConfig's depth_profiles configuration could influence the metadata or structure of boxes saved by GenieStore. The `_depth` key in extract results suggests this connection."
+    detection: "semantic"
+
+  - source: "lib/config.py::GenieConfig.box_size_thresholds"
+    target: "lib/storage/genie_store.py::GenieStore.save_boxes"
+    type: "validation"
+    confidence: 0.7
+    evidence: "box_size_thresholds define minimum sizes for extraction, which would filter which boxes are stored via GenieStore.save_boxes."
+    detection: "semantic"
+
+  - source: "lib/config.py::GenieConfig.file_types"
+    target: "lib/storage/genie_store.py::GenieStore._update_index"
+    type: "constraint"
+    confidence: 0.65
+    evidence: "file_types configuration determines which files are processed, affecting which files are indexed by GenieStore's _update_index method."
+    detection: "semantic"
+
+  - source: "lib/config.py::GenieConfig.exclude_patterns"
+    target: "lib/storage/genie_store.py::GenieStore._update_index"
+    type: "constraint"
+    confidence: 0.65
+    evidence: "exclude_patterns configuration filters out files from processing, affecting which files appear in the index maintained by GenieStore."
+    detection: "semantic"
+
+summary:
+  modules_analyzed:
+    - path: "lib/config.py"
+      class: "GenieConfig"
+      purpose: "Project-level configuration management"
+      key_functions:
+        - "__init__(project_root: str)"
+        - "_load_config() -> dict"
+        - "_merge_config(default, user) -> dict"
+        - "depth (property)"
+        - "depth_profiles (property)"
+        - "box_size_thresholds (property)"
+        - "file_types (property)"
+        - "exclude_patterns (property)"
+        - "should_process_file(filepath) -> bool"
+        - "get_depth_profile(depth) -> dict"
+        - "get_box_threshold(depth) -> dict"
+      file_dependencies:
+        - "yaml"
+        - "pathlib.Path"
+
+    - path: "lib/storage/genie_store.py"
+      class: "GenieStore"
+      purpose: "Persistent storage for black boxes and analysis results"
+      key_functions:
+        - "__init__(project_root: str)"
+        - "load_boxes() -> list[dict]"
+        - "save_boxes(boxes, metadata)"
+        - "load_relationships() -> list[dict]"
+        - "save_relationships(relationships, metadata)"
+        - "load_patterns() -> list[dict]"
+        - "save_patterns(patterns)"
+        - "load_review() -> dict"
+        - "save_review(review)"
+        - "load_index() -> dict"
+        - "_update_index(boxes)"
+        - "_get_timestamp() -> str"
+      file_dependencies:
+        - "json"
+        - "pathlib.Path"
+        - "datetime (lazy import)"
+
+  dependency_analysis:
+    direct_imports: false
+    shared_directory: ".genie/"
+    shared_parameter: "project_root: str"
+
+  architecture_notes: |
+    GenieConfig and GenieStore are complementary components in the doc-genie system:
+
+    1. **Initialization Pattern**: Both classes follow the same initialization pattern
+       accepting `project_root: str` and setting up paths under `.genie/` directory.
+
+    2. **File Structure**:
+       - GenieConfig manages: `.genie/config.yaml` (configuration)
+       - GenieStore manages: `.genie/boxes.json`, `.genie/relationships.json`,
+         `.genie/patterns.json`, `.genie/review.json`, `.genie/index.json`
+
+    3. **Data Flow**:
+       - GenieConfig provides configuration parameters (depth, thresholds, file filters)
+       - External code uses GenieConfig to determine extraction behavior
+       - Results are stored via GenieStore methods
+
+    4. **No Direct Code Dependency**: The two modules do not import each other,
+       but they are designed to work together in the doc-genie pipeline.
+
+    5. **Configuration Influence**: GenieConfig's settings (depth_profiles,
+       box_size_thresholds, file_types, exclude_patterns) can indirectly affect
+       what data is stored in GenieStore by filtering and configuring the
+       extraction process.

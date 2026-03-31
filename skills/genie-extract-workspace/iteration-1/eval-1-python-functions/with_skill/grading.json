@@ -1,0 +1,9 @@
+{
+  "expectations": [
+    {"text": "Output includes the GenieConfig class", "passed": true, "evidence": "Found bb-config-002 through bb-config-012 all within GenieConfig class"},
+    {"text": "Output includes extracted functions (depth, depth_profiles, etc.)", "passed": true, "evidence": "Found 12 black boxes including depth, depth_profiles, box_size_thresholds properties"},
+    {"text": "Output follows YAML format with black boxes structure", "passed": true, "evidence": "Valid YAML with blackboxes array containing id, name, source, inputs, outputs, attributes"},
+    {"text": "Output includes source file information", "passed": true, "evidence": "Each black box has source.file = 'lib/config.py' with line_range"}
+  ],
+  "summary": {"passed": 4, "failed": 0, "total": 4, "pass_rate": 1.0}
+}

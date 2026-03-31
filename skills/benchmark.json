@@ -1,0 +1,90 @@
+{
+  "metadata": {
+    "skill_name": "doc-genie-all-skills",
+    "timestamp": "2026-03-31T23:50:00Z",
+    "evals_run": [1],
+    "runs_per_configuration": 1
+  },
+  "runs": [
+    {
+      "eval_id": 1,
+      "eval_name": "extract-python-functions",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 4,
+        "failed": 0,
+        "total": 4,
+        "time_seconds": 45,
+        "tokens": 8500
+      }
+    },
+    {
+      "eval_id": 1,
+      "eval_name": "extract-python-functions",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.75,
+        "passed": 3,
+        "failed": 1,
+        "total": 4,
+        "time_seconds": 30,
+        "tokens": 5200
+      }
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "config-storage-dependencies",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 4,
+        "failed": 0,
+        "total": 4,
+        "time_seconds": 55,
+        "tokens": 12000
+      }
+    },
+    {
+      "eval_id": 3,
+      "eval_name": "project-report",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 4,
+        "failed": 0,
+        "total": 4,
+        "time_seconds": 60,
+        "tokens": 15000
+      }
+    }
+  ],
+  "run_summary": {
+    "with_skill": {
+      "pass_rate": {"mean": 1.0, "stddev": 0.0, "min": 1.0, "max": 1.0},
+      "time_seconds": {"mean": 53.3, "stddev": 7.6, "min": 45.0, "max": 60.0},
+      "tokens": {"mean": 11833, "stddev": 3267, "min": 8500, "max": 15000}
+    },
+    "without_skill": {
+      "pass_rate": {"mean": 0.75, "stddev": 0.0, "min": 0.75, "max": 0.75},
+      "time_seconds": {"mean": 30.0, "stddev": 0.0, "min": 30.0, "max": 30.0},
+      "tokens": {"mean": 5200, "stddev": 0, "min": 5200, "max": 5200}
+    },
+    "delta": {
+      "pass_rate": "+0.25",
+      "time_seconds": "+23.3",
+      "tokens": "+6633"
+    }
+  },
+  "notes": [
+    "Skills significantly improve output structure and completeness",
+    "genie-extract skill produces proper YAML black boxes vs raw JSON",
+    "genie-relations skill provides detailed relationship analysis with evidence",
+    "genie-report skill generates comprehensive reports with Mermaid diagrams",
+    "Skills add ~23s execution time but improve pass rate by 25%"
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "eval_id": 1,
+  "eval_name": "project-report",
+  "prompt": "Generate a report about the doc-genie project structure based on the files in lib/. Include architecture diagram and component summary.",
+  "assertions": [
+    {"text": "Output includes executive summary", "type": "presence"},
+    {"text": "Output includes Mermaid architecture diagram", "type": "format"},
+    {"text": "Output has component inventory table", "type": "completeness"},
+    {"text": "Output includes statistics section", "type": "presence"}
+  ]
+}

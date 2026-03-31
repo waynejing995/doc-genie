@@ -1,0 +1,11 @@
+{
+  "eval_id": 1,
+  "eval_name": "extractor-patterns",
+  "prompt": "Look at the code in lib/extractors/ and find any patterns, conflicts, or implicit relationships between the different extractors.",
+  "assertions": [
+    {"text": "Output identifies design patterns in extractors", "type": "presence"},
+    {"text": "Output detects potential conflicts or issues", "type": "presence"},
+    {"text": "Output suggests improvements", "type": "completeness"},
+    {"text": "Output has structured format with tables", "type": "format"}
+  ]
+}
