@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{PROJECT_NAME}} - Analysis Report</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+    <style>
+        :root {
+            --primary: #60a5fa;
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --info: #06b6d4;
+            --bg-dark: #0f172a;
+            --bg-card: rgba(30, 41, 59, 0.8);
+            --text: #e2e8f0;
+            --text-muted: #94a3b8;
+            --border: rgba(96, 165, 250, 0.2);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, var(--bg-dark) 0%, #1e293b 100%);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+        .container { max-width: 1400px; margin: 0 auto; }
+
+        /* Header */
+        header { text-align: center; margin-bottom: 3rem; }
+        h1 { font-size: 2.5rem; color: var(--primary); margin-bottom: 0.5rem; }
+        .subtitle { color: var(--text-muted); font-size: 1.1rem; }
+        .timestamp { color: #64748b; margin-top: 0.5rem; font-size: 0.9rem; }
+
+        /* Summary Cards */
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+        .card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 1.5rem;
+            border: 1px solid var(--border);
+            backdrop-filter: blur(10px);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+        .card-title {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .card-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin: 0.5rem 0;
+        }
+        .card.success .card-value { color: var(--success); }
+        .card.warning .card-value { color: var(--warning); }
+        .card.error .card-value { color: var(--error); }
+
+        /* Two Column Layout */
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        /* Network Visualization */
+        #network-container {
+            background: var(--bg-card);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            height: 500px;
+        }
+
+        /* Charts */
+        .chart-container {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 1.5rem;
+            border: 1px solid var(--border);
+        }
+        .chart-title {
+            font-size: 1.25rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        /* Tables */
+        .table-container {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 1.5rem;
+            border: 1px solid var(--border);
+            margin-bottom: 2rem;
+            overflow-x: auto;
+        }
+        .section-title {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid #334155;
+            padding-bottom: 0.5rem;
+        }
+        table { width: 100%; border-collapse: collapse; }
+        th {
+            background: #334155;
+            padding: 1rem;
+            text-align: left;
+            color: var(--text-muted);
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+        }
+        td { padding: 1rem; border-bottom: 1px solid #334155; }
+        tr:hover { background: rgba(51, 65, 85, 0.5); }
+
+        /* Status Badges */
+        .badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+        .badge-success { background: #166534; color: #bbf7d0; }
+        .badge-warning { background: #854d0e; color: #fef9c3; }
+        .badge-error { background: #991b1b; color: #fecaca; }
+        .badge-info { background: #155e75; color: #cffafe; }
+
+        /* Relationship Type Colors */
+        .rel-data_flow { color: var(--success); }
+        .rel-dependency { color: var(--warning); }
+        .rel-interface { color: var(--info); }
+        .rel-conflict { color: var(--error); }
+
+        /* Search Input */
+        .search-input {
+            background: var(--bg-dark);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            color: var(--text);
+            width: 100%;
+            max-width: 300px;
+            margin-bottom: 1rem;
+        }
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        /* Details Panel */
+        .details-panel {
+            background: var(--bg-dark);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 1rem;
+            border: 1px solid var(--border);
+            display: none;
+        }
+        .details-panel.active { display: block; }
+        .details-title { font-weight: 600; color: var(--primary); margin-bottom: 1rem; }
+        .details-row { display: flex; gap: 1rem; margin-bottom: 0.5rem; }
+        .details-label { color: var(--text-muted); min-width: 100px; }
+        .details-value { color: var(--text); }
+
+        /* Insights Section */
+        .insight-card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--primary);
+        }
+        .insight-title { font-weight: 600; color: var(--text); margin-bottom: 0.5rem; }
+        .insight-detail { color: var(--text-muted); font-size: 0.9rem; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .two-col { grid-template-columns: 1fr; }
+            .summary-grid { grid-template-columns: repeat(2, 1fr); }
+            h1 { font-size: 1.75rem; }
+            .card-value { font-size: 2rem; }
+        }
+
+        /* Print Styles */
+        @media print {
+            body { background: white; color: black; }
+            .card, .chart-container, .table-container { background: white; border: 1px solid #ddd; }
+            #network-container { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>{{PROJECT_NAME}}</h1>
+            <p class="subtitle">Architecture Analysis Report</p>
+            <p class="timestamp">Generated: {{TIMESTAMP}}</p>
+        </header>
+
+        <!-- Summary Cards -->
+        <div class="summary-grid">
+            <div class="card">
+                <div class="card-title">Total Black Boxes</div>
+                <div class="card-value" id="box-count">{{BOX_COUNT}}</div>
+            </div>
+            <div class="card success">
+                <div class="card-title">Relationships Found</div>
+                <div class="card-value" id="rel-count">{{REL_COUNT}}</div>
+            </div>
+            <div class="card warning">
+                <div class="card-title">Issues Detected</div>
+                <div class="card-value" id="issue-count">{{ISSUE_COUNT}}</div>
+            </div>
+            <div class="card">
+                <div class="card-title">Avg Confidence</div>
+                <div class="card-value" id="avg-confidence">{{AVG_CONFIDENCE}}</div>
+            </div>
+        </div>
+
+        <!-- Network Visualization & Charts -->
+        <div class="two-col">
+            <div>
+                <div class="chart-title">Architecture Graph</div>
+                <div id="network-container"></div>
+            </div>
+            <div>
+                <div class="chart-container" style="height: 240px; margin-bottom: 1rem;">
+                    <div class="chart-title">Boxes by Type</div>
+                    <canvas id="boxTypeChart"></canvas>
+                </div>
+                <div class="chart-container" style="height: 240px;">
+                    <div class="chart-title">Relationship Distribution</div>
+                    <canvas id="relTypeChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Black Box Inventory -->
+        <div class="table-container">
+            <h2 class="section-title">📦 Black Box Inventory</h2>
+            <input type="text" class="search-input" id="box-search" placeholder="Search boxes...">
+            <table id="box-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Inputs</th>
+                        <th>Outputs</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{BOX_ROWS}}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Relationship Matrix -->
+        <div class="table-container">
+            <h2 class="section-title">🔗 Relationship Matrix</h2>
+            <input type="text" class="search-input" id="rel-search" placeholder="Search relationships...">
+            <table id="rel-table">
+                <thead>
+                    <tr>
+                        <th>Source</th>
+                        <th>→</th>
+                        <th>Target</th>
+                        <th>Type</th>
+                        <th>Confidence</th>
+                        <th>Evidence</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{REL_ROWS}}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Issues Found -->
+        <div class="table-container">
+            <h2 class="section-title">⚠️ Issues Found</h2>
+            <table id="issue-table">
+                <thead>
+                    <tr>
+                        <th>Severity</th>
+                        <th>Type</th>
+                        <th>Location</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{ISSUE_ROWS}}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Insights -->
+        <div class="table-container">
+            <h2 class="section-title">💡 Key Insights</h2>
+            {{INSIGHTS}}
+        </div>
+
+        <!-- Recommendations -->
+        <div class="table-container">
+            <h2 class="section-title">📋 Recommendations</h2>
+            <ol style="padding-left: 1.5rem; color: var(--text-muted);">
+                {{RECOMMENDATIONS}}
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        // Network Visualization
+        const nodes = new vis.DataSet({{VIS_NODES}});
+        const edges = new vis.DataSet({{VIS_EDGES}});
+
+        const container = document.getElementById('network-container');
+        const data = { nodes, edges };
+        const options = {
+            nodes: {
+                shape: 'box',
+                borderRadius: 8,
+                font: { color: '#e2e8f0', face: 'system-ui' },
+                borderWidth: 2,
+                shadow: true
+            },
+            edges: {
+                arrows: 'to',
+                font: { color: '#94a3b8', size: 12 },
+                smooth: { type: 'curvedCW', roundness: 0.2 }
+            },
+            groups: {
+                core: { color: { background: '#1e40af', border: '#60a5fa' } },
+                extractor: { color: { background: '#166534', border: '#22c55e' } },
+                storage: { color: { background: '#854d0e', border: '#f59e0b' } },
+                analysis: { color: { background: '#155e75', border: '#06b6d4' } }
+            },
+            physics: {
+                forceAtlas2Based: { gravitationalConstant: -50 },
+                solver: 'forceAtlas2Based'
+            }
+        };
+
+        const network = new vis.Network(container, data, options);
+
+        // Node click handler
+        network.on('click', function(params) {
+            if (params.nodes.length > 0) {
+                const nodeId = params.nodes[0];
+                const node = nodes.get(nodeId);
+                console.log('Selected:', node.label);
+            }
+        });
+
+        // Charts
+        const colors = {
+            primary: '#60a5fa',
+            success: '#22c55e',
+            warning: '#f59e0b',
+            error: '#ef4444',
+            info: '#06b6d4'
+        };
+
+        // Box Type Chart
+        new Chart(document.getElementById('boxTypeChart'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Core', 'Extractor', 'Storage', 'Analysis'],
+                datasets: [{
+                    data: {{BOX_TYPE_DATA}},
+                    backgroundColor: [colors.primary, colors.success, colors.warning, colors.info]
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { position: 'right', labels: { color: '#94a3b8' } } }
+            }
+        });
+
+        // Relationship Type Chart
+        new Chart(document.getElementById('relTypeChart'), {
+            type: 'bar',
+            data: {
+                labels: ['data_flow', 'dependency', 'interface', 'conflict'],
+                datasets: [{
+                    label: 'Count',
+                    data: {{REL_TYPE_DATA}},
+                    backgroundColor: [colors.success, colors.warning, colors.info, colors.error]
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { beginAtZero: true, ticks: { color: '#94a3b8' }, grid: { color: '#334155' } },
+                    x: { ticks: { color: '#94a3b8' }, grid: { display: false } }
+                }
+            }
+        });
+
+        // Search functionality
+        document.getElementById('box-search').addEventListener('input', function(e) {
+            const query = e.target.value.toLowerCase();
+            document.querySelectorAll('#box-table tbody tr').forEach(row => {
+                row.style.display = row.textContent.toLowerCase().includes(query) ? '' : 'none';
+            });
+        });
+
+        document.getElementById('rel-search').addEventListener('input', function(e) {
+            const query = e.target.value.toLowerCase();
+            document.querySelectorAll('#rel-table tbody tr').forEach(row => {
+                row.style.display = row.textContent.toLowerCase().includes(query) ? '' : 'none';
+            });
+        });
+    </script>
+</body>
+</html>

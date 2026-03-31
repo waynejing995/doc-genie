@@ -48,4 +48,4 @@ Identifies potential conflicts that need resolution.
 
 ## Consumed By
 
-- genie-insights skill for conflict insights
+- boxmatrix-insights skill for conflict insights

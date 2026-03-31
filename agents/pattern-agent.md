@@ -48,4 +48,4 @@ Identifies patterns that could be abstracted or reused.
 
 ## Consumed By
 
-- genie-insights skill for pattern insights
+- boxmatrix-insights skill for pattern insights

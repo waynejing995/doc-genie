@@ -1,0 +1,26 @@
+{
+  "skill_name": "doc-genie-skills",
+  "evals": [
+    {
+      "id": 1,
+      "name": "extract-python-blackboxes",
+      "prompt": "Extract black boxes from lib/config.py and save to skills/e2e-real/iteration-1/eval-1/outputs/",
+      "skill_path": "skills/genie-extract",
+      "files": ["lib/config.py"]
+    },
+    {
+      "id": 2,
+      "name": "analyze-config-storage-relations",
+      "prompt": "Analyze relationships between lib/config.py and lib/storage/genie_store.py, save results to skills/e2e-real/iteration-1/eval-2/outputs/",
+      "skill_path": "skills/genie-relations",
+      "files": ["lib/config.py", "lib/storage/genie_store.py"]
+    },
+    {
+      "id": 3,
+      "name": "generate-project-report",
+      "prompt": "Generate a project structure report for doc-genie, save to skills/e2e-real/iteration-1/eval-3/outputs/",
+      "skill_path": "skills/genie-report",
+      "files": []
+    }
+  ]
+}

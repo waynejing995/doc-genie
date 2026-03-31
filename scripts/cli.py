@@ -1,4 +1,4 @@
-"""doc-genie CLI - unified command line interface."""
+"""doc-boxmatrix CLI - unified command line interface."""
 
 import argparse
 import json
@@ -8,7 +8,7 @@ from pathlib import Path
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        prog="genie", description="doc-genie: Document analysis tool"
+        prog="boxmatrix", description="doc-boxmatrix: Document analysis tool"
     )
     subparsers = parser.add_subparsers(dest="command")
 
@@ -21,7 +21,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     ext.add_argument("--depth", "-d", choices=["quick", "medium", "deep"], help="Extraction depth")
 
     # init command
-    subparsers.add_parser("init", help="Initialize .genie directory")
+    subparsers.add_parser("init", help="Initialize .boxmatrix directory")
 
     # config command
     cfg = subparsers.add_parser("config", help="Show configuration")
@@ -81,21 +81,21 @@ def extract(files: list[str], output: str = "text", depth: str | None = None) ->
     return results
 
 
-def init_genie():
-    """Initialize .genie directory with default config."""
+def init_boxmatrix():
+    """Initialize .boxmatrix directory with default config."""
     from lib.config import DEFAULT_CONFIG
     import yaml
 
-    genie_dir = Path(".genie")
-    genie_dir.mkdir(exist_ok=True)
+    boxmatrix_dir = Path(".boxmatrix")
+    boxmatrix_dir.mkdir(exist_ok=True)
 
-    config_file = genie_dir / "config.yaml"
+    config_file = boxmatrix_dir / "config.yaml"
     if config_file.exists():
-        print("Config already exists at .genie/config.yaml")
+        print("Config already exists at .boxmatrix/config.yaml")
         return
 
     config_file.write_text(yaml.dump(DEFAULT_CONFIG, default_flow_style=False))
-    print("Created .genie/config.yaml with default configuration")
+    print("Created .boxmatrix/config.yaml with default configuration")
 
 
 def show_config():
@@ -113,7 +113,7 @@ def main(argv: list[str] | None = None) -> int:
     if args.command == "extract":
         extract(args.files, args.output, args.depth)
     elif args.command == "init":
-        init_genie()
+        init_boxmatrix()
     elif args.command == "config":
         if args.action == "show":
             show_config()
@@ -124,7 +124,7 @@ def main(argv: list[str] | None = None) -> int:
         print(f"Generating {args.format} report...")
         # TODO: Implement report
     else:
-        print("Usage: genie [extract|init|config|analyze|report]")
+        print("Usage: boxmatrix [extract|init|config|analyze|report]")
         return 1
 
     return 0

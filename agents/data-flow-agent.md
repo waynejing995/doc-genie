@@ -40,4 +40,4 @@ Analyzes how data moves between black boxes.
 
 ## Consumed By
 
-- genie-relations skill for relationship mapping
+- boxmatrix-relations skill for relationship mapping

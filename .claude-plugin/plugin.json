@@ -1,5 +1,5 @@
 {
-  "name": "doc-genie",
+  "name": "boxmatrix",
   "version": "0.2.0",
   "description": "Extract black boxes from docs/code, map relationships, discover cross-doc insights",
   "author": {

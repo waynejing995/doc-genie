@@ -1,0 +1,95 @@
+{
+  "file": "lib/config.py",
+  "description": "Project configuration management",
+  "classes": [
+    {
+      "name": "GenieConfig",
+      "description": "Project-level configuration for doc-genie",
+      "methods": [
+        {
+          "name": "__init__",
+          "type": "constructor",
+          "signature": "__init__(self, project_root: str = \".\")",
+          "description": "Initialize GenieConfig with project root path"
+        },
+        {
+          "name": "_load_config",
+          "type": "private_method",
+          "signature": "_load_config(self) -> dict[str, Any]",
+          "description": "Load configuration from file or return defaults"
+        },
+        {
+          "name": "_merge_config",
+          "type": "private_method",
+          "signature": "_merge_config(self, default: dict, user: dict) -> dict",
+          "description": "Deep merge user config into defaults"
+        },
+        {
+          "name": "should_process_file",
+          "type": "public_method",
+          "signature": "should_process_file(self, filepath: str) -> bool",
+          "description": "Check if file should be processed based on config"
+        },
+        {
+          "name": "get_depth_profile",
+          "type": "public_method",
+          "signature": "get_depth_profile(self, depth: str | None = None) -> dict",
+          "description": "Get settings for a specific depth level"
+        },
+        {
+          "name": "get_box_threshold",
+          "type": "public_method",
+          "signature": "get_box_threshold(self, depth: str | None = None) -> dict",
+          "description": "Get box size threshold for a specific depth"
+        }
+      ],
+      "properties": [
+        {
+          "name": "depth",
+          "type": "property",
+          "signature": "depth(self) -> str",
+          "description": "Current extraction depth"
+        },
+        {
+          "name": "depth_profiles",
+          "type": "property",
+          "signature": "depth_profiles(self) -> dict",
+          "description": "Depth profile settings"
+        },
+        {
+          "name": "box_size_thresholds",
+          "type": "property",
+          "signature": "box_size_thresholds(self) -> dict",
+          "description": "Box size thresholds by depth"
+        },
+        {
+          "name": "file_types",
+          "type": "property",
+          "signature": "file_types(self) -> list[str]",
+          "description": "Supported file types"
+        },
+        {
+          "name": "exclude_patterns",
+          "type": "property",
+          "signature": "exclude_patterns(self) -> list[str]",
+          "description": "Patterns to exclude"
+        }
+      ]
+    }
+  ],
+  "functions": [],
+  "module_level_variables": [
+    {
+      "name": "DEFAULT_CONFIG",
+      "type": "dict",
+      "description": "Default configuration dictionary containing version, depth, box_size_thresholds, depth_profiles, file_types, exclude_patterns, and output settings"
+    }
+  ],
+  "summary": {
+    "total_classes": 1,
+    "total_methods": 6,
+    "total_properties": 5,
+    "total_functions": 0,
+    "total_module_variables": 1
+  }
+}

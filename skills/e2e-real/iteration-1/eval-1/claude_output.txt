@@ -1,0 +1,18 @@
+已完成 black boxes 提取。
+
+**提取结果总结：**
+
+从 `lib/config.py` 中提取了 **8 个 black boxes**：
+
+| ID | 名称 | 类型 | 行范围 |
+|----|------|------|--------|
+| bb-001 | DEFAULT_CONFIG | 模块常量 | 8-39 |
+| bb-002 | GenieConfig | 类定义 | 42-120 |
+| bb-003 | GenieConfig._load_config | 私有方法 | 50-56 |
+| bb-004 | GenieConfig._merge_config | 私有方法 | 58-70 |
+| bb-005 | GenieConfig Properties | 属性定义 | 72-95 |
+| bb-006 | GenieConfig.should_process_file | 公共方法 | 97-110 |
+| bb-007 | GenieConfig.get_depth_profile | 公共方法 | 112-115 |
+| bb-008 | GenieConfig.get_box_threshold | 公共方法 | 117-120 |
+
+输出文件已保存至：`skills/e2e-real/iteration-1/eval-1/outputs/blackboxes.yaml`

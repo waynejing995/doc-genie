@@ -48,4 +48,4 @@ Analyzes structural dependencies between boxes.
 
 ## Consumed By
 
-- genie-relations skill for dependency mapping
+- boxmatrix-relations skill for dependency mapping

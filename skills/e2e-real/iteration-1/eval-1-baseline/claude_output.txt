@@ -1,0 +1,18 @@
+已完成。从 `lib/config.py` 中提取的 black boxes 已保存到 `skills/e2e-real/iteration-1/eval-1-baseline/outputs/blackboxes.json`。
+
+**提取结果摘要：**
+
+| 类型 | 数量 |
+|------|------|
+| 类 | 1 |
+| 方法 | 6 |
+| 属性 | 5 |
+| 函数 | 0 |
+| 模块变量 | 1 |
+
+**详细内容：**
+
+- **类**: `GenieConfig` - 项目级配置管理
+  - 方法：`__init__`, `_load_config`, `_merge_config`, `should_process_file`, `get_depth_profile`, `get_box_threshold`
+  - 属性：`depth`, `depth_profiles`, `box_size_thresholds`, `file_types`, `exclude_patterns`
+- **模块变量**: `DEFAULT_CONFIG` - 默认配置字典

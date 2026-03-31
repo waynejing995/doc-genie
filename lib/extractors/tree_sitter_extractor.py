@@ -106,11 +106,46 @@ def _extract_python_elements(root, source: bytes) -> tuple[list, list, list]:
         elif node.type == "class_definition":
             name_node = node.child_by_field_name("name")
             if name_node:
-                classes.append({
+                class_info = {
                     "name": source[name_node.start_byte:name_node.end_byte].decode(),
                     "line": node.start_point[0] + 1,
                     "bases": _extract_python_bases(node, source),
-                })
+                    "methods": [],
+                }
+                # Extract methods from class body
+                body = node.child_by_field_name("body")
+                if body:
+                    for child in body.children:
+                        # Handle both plain and decorated function definitions
+                        if child.type == "function_definition":
+                            method_name = child.child_by_field_name("name")
+                            if method_name:
+                                class_info["methods"].append({
+                                    "name": source[method_name.start_byte:method_name.end_byte].decode(),
+                                    "line": child.start_point[0] + 1,
+                                    "args": _extract_python_args(child, source),
+                                    "decorators": [],
+                                })
+                        elif child.type == "decorated_definition":
+                            # Extract decorators and the underlying function
+                            decorators = []
+                            func_node = None
+                            for sub in child.children:
+                                if sub.type == "decorator":
+                                    dec_text = source[sub.start_byte:sub.end_byte].decode()
+                                    decorators.append(dec_text)
+                                elif sub.type == "function_definition":
+                                    func_node = sub
+                            if func_node:
+                                method_name = func_node.child_by_field_name("name")
+                                if method_name:
+                                    class_info["methods"].append({
+                                        "name": source[method_name.start_byte:method_name.end_byte].decode(),
+                                        "line": func_node.start_point[0] + 1,
+                                        "args": _extract_python_args(func_node, source),
+                                        "decorators": decorators,
+                                    })
+                classes.append(class_info)
         elif node.type == "import_statement":
             imports.extend(_extract_python_import(node, source))
         elif node.type == "import_from_statement":
@@ -209,10 +244,23 @@ def _extract_js_elements(root, source: bytes) -> tuple[list, list, list]:
         elif node.type == "class_declaration":
             name_node = node.child_by_field_name("name")
             if name_node:
-                classes.append({
+                class_info = {
                     "name": source[name_node.start_byte:name_node.end_byte].decode(),
                     "line": node.start_point[0] + 1,
-                })
+                    "methods": [],
+                }
+                # Extract methods from class body
+                body = node.child_by_field_name("body")
+                if body:
+                    for child in body.children:
+                        if child.type in ("method_definition", "function_declaration"):
+                            method_name = child.child_by_field_name("name")
+                            if method_name:
+                                class_info["methods"].append({
+                                    "name": source[method_name.start_byte:method_name.end_byte].decode(),
+                                    "line": child.start_point[0] + 1,
+                                })
+                classes.append(class_info)
         elif node.type == "import_statement":
             imports.append({
                 "module": "import",
@@ -229,15 +277,28 @@ def _extract_c_elements(root, source: bytes) -> tuple[list, list]:
 
     for node in root.children:
         if node.type == "function_definition":
-            # Find function name in declarator
+            # Find function name - handle both simple and pointer-returning functions
+            func_name = None
             for child in node.children:
                 if child.type == "function_declarator":
+                    # Simple function: function_declarator contains identifier directly
                     for sub in child.children:
                         if sub.type == "identifier":
-                            functions.append({
-                                "name": source[sub.start_byte:sub.end_byte].decode(),
-                                "line": node.start_point[0] + 1,
-                            })
+                            func_name = source[sub.start_byte:sub.end_byte].decode()
+                            break
+                elif child.type == "pointer_declarator":
+                    # Pointer-returning function: function_declarator is nested inside pointer_declarator
+                    for sub in child.children:
+                        if sub.type == "function_declarator":
+                            for fd_child in sub.children:
+                                if fd_child.type == "identifier":
+                                    func_name = source[fd_child.start_byte:fd_child.end_byte].decode()
+                                    break
+            if func_name:
+                functions.append({
+                    "name": func_name,
+                    "line": node.start_point[0] + 1,
+                })
         elif node.type == "preproc_include":
             imports.append({
                 "module": "include",

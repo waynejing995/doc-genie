@@ -1,0 +1,258 @@
+blackboxes:
+  - id: "bb-001"
+    name: "DEFAULT_CONFIG"
+    source:
+      type: "code"
+      file: "lib/config.py"
+      section: "Module-level constant"
+      line_range: [8, 39]
+
+    inputs:
+      - name: "None"
+        type: "data"
+        required: false
+        format: "N/A"
+        description: "Static configuration dictionary"
+
+    outputs:
+      - name: "config_dict"
+        type: "data"
+        format: "dict"
+        description: "Default configuration containing version, depth, box_size_thresholds, depth_profiles, file_types, exclude_patterns, and output settings"
+
+    attributes:
+      constraints:
+        - "Must contain 'version' key"
+        - "Must contain 'depth' key with value 'quick', 'medium', or 'deep'"
+        - "Must contain 'box_size_thresholds' for each depth level"
+        - "Must contain 'depth_profiles' with extract_comments, extract_signatures, detect_implicit, confidence_threshold"
+      dependencies: []
+      properties:
+        owner: "doc-genie-core"
+        status: "approved"
+
+  - id: "bb-002"
+    name: "GenieConfig"
+    source:
+      type: "code"
+      file: "lib/config.py"
+      section: "Class definition"
+      line_range: [42, 120]
+
+    inputs:
+      - name: "project_root"
+        type: "parameter"
+        required: false
+        format: "string"
+        description: "Path to the project root directory (defaults to '.')"
+
+    outputs:
+      - name: "config_instance"
+        type: "data"
+        format: "object"
+        description: "GenieConfig instance with loaded configuration"
+
+    attributes:
+      constraints:
+        - "Config file path is .genie/config.yaml relative to project_root"
+        - "Uses YAML format for configuration files"
+        - "Deep merges user config with DEFAULT_CONFIG"
+      dependencies:
+        - "bb-001"
+      properties:
+        owner: "doc-genie-core"
+        status: "approved"
+
+  - id: "bb-003"
+    name: "GenieConfig._load_config"
+    source:
+      type: "code"
+      file: "lib/config.py"
+      section: "Private method"
+      line_range: [50, 56]
+
+    inputs:
+      - name: "config_file"
+        type: "data"
+        required: false
+        format: "Path"
+        description: "Path to configuration file"
+
+    outputs:
+      - name: "config_dict"
+        type: "data"
+        format: "dict"
+        description: "Merged configuration dictionary or DEFAULT_CONFIG if file doesn't exist"
+
+    attributes:
+      constraints:
+        - "Returns DEFAULT_CONFIG if config file doesn't exist"
+        - "Uses yaml.safe_load for parsing"
+        - "Calls _merge_config if user config exists"
+      dependencies:
+        - "bb-001"
+        - "bb-004"
+      properties:
+        owner: "doc-genie-core"
+        status: "approved"
+
+  - id: "bb-004"
+    name: "GenieConfig._merge_config"
+    source:
+      type: "code"
+      file: "lib/config.py"
+      section: "Private method"
+      line_range: [58, 70]
+
+    inputs:
+      - name: "default"
+        type: "parameter"
+        required: true
+        format: "dict"
+        description: "Default configuration dictionary"
+      - name: "user"
+        type: "parameter"
+        required: true
+        format: "dict"
+        description: "User-provided configuration dictionary"
+
+    outputs:
+      - name: "merged_config"
+        type: "data"
+        format: "dict"
+        description: "Deep-merged configuration dictionary"
+
+    attributes:
+      constraints:
+        - "Performs deep merge for nested dictionaries"
+        - "User values override default values"
+        - "Preserves default structure for keys not in user config"
+      dependencies: []
+      properties:
+        owner: "doc-genie-core"
+        status: "approved"
+
+  - id: "bb-005"
+    name: "GenieConfig Properties (depth, depth_profiles, box_size_thresholds, file_types, exclude_patterns)"
+    source:
+      type: "code"
+      file: "lib/config.py"
+      section: "Property definitions"
+      line_range: [72, 95]
+
+    inputs:
+      - name: "_config"
+        type: "data"
+        required: true
+        format: "dict"
+        description: "Internal configuration dictionary"
+
+    outputs:
+      - name: "config_value"
+        type: "data"
+        format: "varies (str, dict, list)"
+        description: "Returns the specific configuration value with defaults"
+
+    attributes:
+      constraints:
+        - "Each property returns value from _config or a sensible default"
+        - "Read-only access to configuration"
+      dependencies:
+        - "bb-001"
+      properties:
+        owner: "doc-genie-core"
+        status: "approved"
+
+  - id: "bb-006"
+    name: "GenieConfig.should_process_file"
+    source:
+      type: "code"
+      file: "lib/config.py"
+      section: "Public method"
+      line_range: [97, 110]
+
+    inputs:
+      - name: "filepath"
+        type: "parameter"
+        required: true
+        format: "string"
+        description: "Path to file to check"
+
+    outputs:
+      - name: "should_process"
+        type: "data"
+        format: "bool"
+        description: "True if file should be processed, False if excluded"
+
+    attributes:
+      constraints:
+        - "Returns False if file extension not in file_types"
+        - "Returns False if path matches any exclude_patterns"
+        - "Uses Path.match for pattern matching"
+      dependencies:
+        - "bb-005"
+      properties:
+        owner: "doc-genie-core"
+        status: "approved"
+
+  - id: "bb-007"
+    name: "GenieConfig.get_depth_profile"
+    source:
+      type: "code"
+      file: "lib/config.py"
+      section: "Public method"
+      line_range: [112, 115]
+
+    inputs:
+      - name: "depth"
+        type: "parameter"
+        required: false
+        format: "string"
+        description: "Depth level ('quick', 'medium', 'deep'). Defaults to instance depth"
+
+    outputs:
+      - name: "profile"
+        type: "data"
+        format: "dict"
+        description: "Depth profile settings containing extract_comments, extract_signatures, detect_implicit, confidence_threshold"
+
+    attributes:
+      constraints:
+        - "Falls back to 'medium' profile if depth not found"
+        - "Defaults to instance depth if not provided"
+      dependencies:
+        - "bb-005"
+      properties:
+        owner: "doc-genie-core"
+        status: "approved"
+
+  - id: "bb-008"
+    name: "GenieConfig.get_box_threshold"
+    source:
+      type: "code"
+      file: "lib/config.py"
+      section: "Public method"
+      line_range: [117, 120]
+
+    inputs:
+      - name: "depth"
+        type: "parameter"
+        required: false
+        format: "string"
+        description: "Depth level ('quick', 'medium', 'deep'). Defaults to instance depth"
+
+    outputs:
+      - name: "threshold"
+        type: "data"
+        format: "dict"
+        description: "Box size threshold containing min_lines and min_chars"
+
+    attributes:
+      constraints:
+        - "Falls back to 'medium' threshold if depth not found"
+        - "Defaults to instance depth if not provided"
+      dependencies:
+        - "bb-005"
+      properties:
+        owner: "doc-genie-core"
+        status: "approved"

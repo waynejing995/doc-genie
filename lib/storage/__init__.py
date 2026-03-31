@@ -1,1 +1,1 @@
-"""Storage module for doc-genie."""
+"""Storage module for BoxMatrix."""

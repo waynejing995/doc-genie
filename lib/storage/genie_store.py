@@ -1,4 +1,4 @@
-"""Persistent storage for doc-genie analysis results."""
+"""Persistent storage for BoxMatrix analysis results."""
 
 import json
 from pathlib import Path
@@ -10,14 +10,14 @@ class GenieStore:
 
     def __init__(self, project_root: str = "."):
         self.project_root = Path(project_root)
-        self.genie_dir = self.project_root / ".genie"
-        self.genie_dir.mkdir(exist_ok=True)
+        self.boxmatrix_dir = self.project_root / ".boxmatrix"
+        self.boxmatrix_dir.mkdir(exist_ok=True)
 
-        self.boxes_file = self.genie_dir / "boxes.json"
-        self.rels_file = self.genie_dir / "relationships.json"
-        self.patterns_file = self.genie_dir / "patterns.json"
-        self.review_file = self.genie_dir / "review.json"
-        self.index_file = self.genie_dir / "index.json"
+        self.boxes_file = self.boxmatrix_dir / "boxes.json"
+        self.rels_file = self.boxmatrix_dir / "relationships.json"
+        self.patterns_file = self.boxmatrix_dir / "patterns.json"
+        self.review_file = self.boxmatrix_dir / "review.json"
+        self.index_file = self.boxmatrix_dir / "index.json"
 
     def load_boxes(self) -> list[dict]:
         """Load black boxes from storage."""

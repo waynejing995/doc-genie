@@ -40,11 +40,11 @@ DEFAULT_CONFIG = {
 
 
 class GenieConfig:
-    """Project-level configuration for doc-genie."""
+    """Project-level configuration for BoxMatrix."""
 
     def __init__(self, project_root: str = "."):
         self.project_root = Path(project_root)
-        self.config_file = self.project_root / ".genie" / "config.yaml"
+        self.config_file = self.project_root / ".boxmatrix" / "config.yaml"
         self._config = self._load_config()
 
     def _load_config(self) -> dict[str, Any]:

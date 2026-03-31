@@ -1,0 +1,15 @@
+已完成分析并保存结果到 `skills/e2e-real/iteration-1/eval-2/outputs/relationships.yaml`。
+
+**分析总结：**
+
+| 关系 | 类型 | 置信度 | 检测方法 |
+|------|------|--------|----------|
+| config → store | dependency | 0.7 | semantic |
+| config → store | constraint | 0.85 | pattern |
+| store → config | interface | 0.6 | structural |
+| store → config | data_flow | 0.55 | semantic |
+
+**关键发现：**
+- `GenieConfig` 定义的配置（`exclude_patterns`、`depth_profiles`、`file_types`）约束 `GenieStore` 的行为
+- 两者共享 `project_root` 初始化模式，使用相似的 `Path` 对象操作
+- 存储的 boxes 数据可能包含配置相关的内容

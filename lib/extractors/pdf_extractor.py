@@ -69,9 +69,17 @@ def _is_heading(line: str) -> bool:
         r"^Section\s+\d+",
         r"^Abstract",
         r"^Introduction",
+        r"^Methods",
+        r"^Methodology",
+        r"^Results",
+        r"^Discussion",
         r"^Conclusion",
         r"^References",
         r"^Appendix",
+        r"^Background",
+        r"^Summary",
+        r"^Overview",
+        r"^Acknowledgments",
     ]
     for pattern in heading_patterns:
         if re.match(pattern, line, re.IGNORECASE):

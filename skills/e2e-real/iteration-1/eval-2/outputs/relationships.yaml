@@ -1,0 +1,29 @@
+# Relationships between lib/config.py and lib/storage/genie_store.py
+relationships:
+  - source: "bb-config-001"
+    target: "bb-store-001"
+    type: "dependency"
+    confidence: 0.7
+    evidence: "GenieConfig 定义项目配置（depth_profiles、box_size_thresholds、file_types），GenieStore 在存储 black boxes 时依赖这些配置决定存储结构和索引方式"
+    detection: "semantic"
+
+  - source: "bb-config-001"
+    target: "bb-store-001"
+    type: "constraint"
+    confidence: 0.85
+    evidence: "GenieConfig 的 exclude_patterns 约束 GenieStore 处理的文件范围，output.format 配置影响存储格式"
+    detection: "pattern"
+
+  - source: "bb-store-001"
+    target: "bb-config-001"
+    type: "interface"
+    confidence: 0.6
+    evidence: "GenieStore 的 _update_index 方法使用与 GenieConfig 相似的路径处理模式（Path 对象操作），两者共享 project_root 初始化参数"
+    detection: "structural"
+
+  - source: "bb-store-001"
+    target: "bb-config-001"
+    type: "data_flow"
+    confidence: 0.55
+    evidence: "GenieStore 存储的 boxes 可能包含由 GenieConfig 定义的配置数据（如 depth、file_types 设置），配置变更会影响存储内容"
+    detection: "semantic"
