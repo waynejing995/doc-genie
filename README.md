@@ -1,60 +1,201 @@
-# doc-genie
+# BoxMatrix
 
-Extract black boxes from documents and code. Map relationships. Discover cross-doc insights.
+> **Box** = Self-contained unit | **Matrix** = Relationship network
 
-> Pure-local. No external services. No LLM API calls.
+A Claude Code plugin for extracting black boxes from code/documents and mapping their relationships.
 
-## What It Does
+## Design Philosophy
 
-1. **Extract** — Parse PDF/DOCX/Markdown/code into structured black boxes (inputs, outputs, constraints)
-2. **Relate** — Map relationships: data flow, dependencies, calls, constraints
-3. **Insight** — Deep analysis: implicit relationships, conflicts, patterns (AI-guided via SKILL)
-4. **Report** — Generate reports: Markdown + Mermaid, tables, interactive web
+### The BoxMatrix Concept
 
-## Quick Start
+Every system is composed of **Boxes** (components) connected in a **Matrix** (relationship network):
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                         MATRIX                               │
+│  ┌───────┐     ┌───────┐     ┌───────┐     ┌───────┐       │
+│  │ Box A │────▶│ Box B │────▶│ Box C │────▶│ Box D │       │
+│  └───────┘     └───────┘     └───────┘     └───────┘       │
+│      │                           │                           │
+│      └───────────────────────────┘                           │
+│              (relationship)                                   │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Three-Layer Architecture
+
+BoxMatrix uses a three-layer approach for deep understanding:
+
+| Layer | Technology | Purpose |
+|-------|------------|---------|
+| **Index** | tree-sitter | Fast structural scanning |
+| **Detection** | Pattern rules | Identify relationships |
+| **Analysis** | AI Skills | Semantic understanding |
+
+**Key insight**: tree-sitter only provides the skeleton. AI Skills provide the semantic understanding - inputs, outputs, constraints, and real data flow.
+
+### The Black Box Abstraction
+
+Each component is modeled as a **Box** with:
+
+```yaml
+- id: box-001
+  name: UserService
+  inputs:
+    - name: user_id
+      type: str
+      description: "User identifier"
+  outputs:
+    - name: user_data
+      type: dict
+      description: "User profile data"
+  attributes:
+    constraints: ["Requires authentication"]
+    dependencies: [box-002, box-003]
+```
+
+## Installation
 
 ```bash
-# Install
-uv venv
-uv pip install -e .
+# Clone the repository
+git clone https://github.com/your-org/boxmatrix.git
+cd boxmatrix
 
-# Analyze documents
-genie-extract spec1.pdf spec2.md src/
-genie-analyze
-genie-report --format markdown
+# Install dependencies
+uv sync
+
+# Install the plugin
+claude plugin install .
 ```
 
-## Skills
+## Usage
 
-| Skill | Purpose | Triggers |
-|-------|---------|----------|
-| `genie-extract` | Extract black boxes | extract, parse, analyze |
-| `genie-relations` | Map relationships | relationship, dependency |
-| `genie-insights` | Deep analysis | conflicts, implicit, patterns |
-| `genie-report` | Generate reports | report, visualize, diagram |
+### CLI Commands
 
-## Platform Support
+```bash
+# Extract boxes from code
+uv run boxmatrix extract lib/ --output .genie/boxes.yaml
 
-| Platform | Integration |
-|----------|-------------|
-| Claude Code | `plugin.json` + `skills/` |
-| OpenCode | `openclaw-plugin.json` + `skills/` |
-| Cursor | `.cursor/rules/*.mdc` |
-| Copilot | `.github/copilot-instructions.md` |
-| CLI | `scripts/cli.py` |
+# Analyze relationships
+uv run boxmatrix relations lib/ --output .genie/relationships.yaml
 
-## Architecture
+# Find patterns and insights
+uv run boxmatrix insights lib/ --output .genie/insights.yaml
+
+# Generate interactive HTML report
+uv run boxmatrix report --format html --output .genie/report.html
+```
+
+### Using Skills in Claude Code
+
+The plugin provides four AI-powered skills:
+
+#### 1. boxmatrix-extract
+
+Extract black boxes from code or documents.
 
 ```
-Layer 1: Structure Extraction (ast-grep, pdfplumber, python-docx)
-     │
-     ▼
-Layer 2: Pattern Detection (regex, IO matching, name references)
-     │
-     ▼
-Layer 3: Semantic Analysis (SKILL-guided AI, no external LLM)
+Use the boxmatrix-extract skill to extract boxes from lib/config.py
+```
+
+**Output**: YAML file with structured boxes including inputs, outputs, and dependencies.
+
+#### 2. boxmatrix-relations
+
+Analyze relationships between components.
+
+```
+Use the boxmatrix-relations skill to analyze relationships between lib/config.py and lib/storage/
+```
+
+**Relationship types**:
+- `data_flow` - Data moves from A to B
+- `dependency` - A depends on B
+- `interface` - A calls B's interface
+- `constraint` - A constrains B's behavior
+- `conflict` - A conflicts with B
+
+#### 3. boxmatrix-insights
+
+Discover hidden patterns, conflicts, and implicit relationships.
+
+```
+Use the boxmatrix-insights skill to find patterns in lib/extractors/
+```
+
+**Finds**:
+- Design patterns (Strategy, Repository, Observer)
+- Anti-patterns (duplication, implicit coupling)
+- Missing components
+- Optimization opportunities
+
+#### 4. boxmatrix-report
+
+Generate interactive HTML reports with visualizations.
+
+```
+Use the boxmatrix-report skill to generate a full project report
+```
+
+**Features**:
+- Interactive network graph (vis.js)
+- Component distribution charts (Chart.js)
+- Searchable tables
+- Dark theme
+
+## Project Structure
+
+```
+boxmatrix/
+├── .claude-plugin/
+│   └── plugin.json          # Plugin manifest
+├── skills/
+│   ├── boxmatrix-extract/   # Extraction skill
+│   ├── boxmatrix-relations/ # Relationship analysis
+│   ├── boxmatrix-insights/  # Pattern detection
+│   └── boxmatrix-report/    # Report generation
+├── agents/
+│   ├── extract-worker.md    # Parallel extraction
+│   ├── data-flow-agent.md   # Data flow analysis
+│   └── ...
+├── lib/
+│   ├── blackbox_model.py    # Box data model
+│   ├── relationship_types.py # Relationship types
+│   ├── extractors/          # Code/document extractors
+│   └── storage/             # Persistence layer
+└── tests/                   # Test suite
+```
+
+## Supported Formats
+
+### Code
+- Python (AST + tree-sitter)
+- JavaScript/TypeScript
+- C/C++
+- Go, Java, Rust (optional)
+
+### Documents
+- PDF
+- DOCX
+- Markdown
+
+## Development
+
+```bash
+# Run tests
+uv run pytest tests/ -v
+
+# Run E2E evaluation
+uv run python scripts/run_e2e_eval.py
+
+# View report
+open .genie/e2e/e2e_report.html
 ```
 
 ## License
 
 MIT
+
+---
+
+**BoxMatrix** - Every system is a matrix of connected boxes.
