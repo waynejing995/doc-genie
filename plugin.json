@@ -1,0 +1,13 @@
+{
+  "name": "doc-genie",
+  "description": "Extract black boxes from docs/code, map relationships, discover cross-doc insights. Supports PDF/DOCX/MD with layout awareness.",
+  "version": "0.1.0",
+  "author": "waynejing995",
+  "license": "MIT",
+  "skills": [
+    "./skills/genie-extract",
+    "./skills/genie-relations",
+    "./skills/genie-insights",
+    "./skills/genie-report"
+  ]
+}
