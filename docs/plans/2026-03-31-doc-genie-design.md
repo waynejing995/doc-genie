@@ -256,36 +256,33 @@ doc-genie/
 ├── .github/copilot-instructions.md # Copilot
 ├── skills/
 │   ├── genie-extract/
+│   │   ├── SKILL.md
+│   │   └── OUTPUT.md              # 独立模板文件
 │   ├── genie-relations/
+│   │   ├── SKILL.md
+│   │   └── OUTPUT.md
 │   ├── genie-insights/
+│   │   ├── SKILL.md
+│   │   └── OUTPUT.md
 │   └── genie-report/
+│       ├── SKILL.md
+│       └── OUTPUT.md
 ├── lib/
-│   ├── blackbox_model.py
-│   ├── relationship_types.py
-│   ├── visualizer.py
-│   ├── extractors/
-│   │   ├── pdf_layout.py
-│   │   ├── docx_structure.py
-│   │   └── code_analyzer.py
-│   └── patterns/
-│       └── relationship_patterns.py
-├── templates/
-│   ├── report.md
-│   └── web-report.html
+│   └── ...
 └── scripts/
     └── cli.py
 ```
 
 ### 8.2 平台支持
 
-| 平台 | 适配方式 |
-|------|----------|
-| Claude Code | plugin.json + skills/ |
-| OpenCode | openclaw-plugin.json + skills/ |
-| Cursor | .cursor/rules/*.mdc |
-| Copilot | .github/copilot-instructions.md |
-| Codex | AGENTS.md + .agents/skills/ |
-| CLI | scripts/cli.py |
+| 平台 | 适配方式 | 格式 |
+|------|----------|------|
+| Claude Code | plugin.json + skills/ | SKILL.md |
+| OpenCode | openclaw-plugin.json + skills/ | SKILL.md |
+| Cursor | .cursor/rules/*.mdc | MDC frontmatter |
+| Copilot | .github/copilot-instructions.md | Markdown |
+| Codex | AGENTS.md + .agents/skills/ | SKILL.md |
+| CLI | scripts/cli.py | Python |
 
 ---
 
@@ -332,24 +329,65 @@ dependencies = [
 
 ---
 
-## 11. 语言策略
+## 11. 子代理支持
 
-- **Skills**: 英文（SKILL.md, references/）
+对于大量黑盒的分析，使用子代理并行处理：
+
+### 分块策略
+
+```
+100 个黑盒
+     │
+     ▼
+┌─────────────────┐
+│ 分块            │ 每 10 个一组
+└────────┬────────┘
+         │
+    ┌────┴────┬─────────┬─────────┐
+    ▼         ▼         ▼         ▼
+ Agent 1   Agent 2   Agent 3   Agent 4
+ (1-10)    (11-20)   (21-30)   (31-40)
+    │         │         │         │
+    └─────────┴─────────┴─────────┘
+              │
+              ▼
+         合并结果
+```
+
+### 子代理模板
+
+每个 skill 目录下的 OUTPUT.md 包含子代理格式：
+
+- `skills/genie-extract/OUTPUT.md` — 黑盒提取子代理格式
+- `skills/genie-relations/OUTPUT.md` — 关系映射子代理格式
+- `skills/genie-insights/OUTPUT.md` — 深度分析子代理格式
+
+### 合并策略
+
+1. 按 ID 去重
+2. 合并同 ID 的详细信息
+3. 关系取高置信度
+4. 冲突合并报告
+
+---
+
+## 12. 语言策略
+
+- **Skills**: 英文（SKILL.md, OUTPUT.md）
 - **代码注释**: 英文
 - **README**: 英文默认 + 中文版可选（README.zh-cn.md）
 - **输出报告**: 跟随用户文档语言
 
 ---
 
-## 12. 下一步
+## 13. 下一步
 
-进入实现阶段，按以下顺序：
+进入实现阶段（TDD）：
 
-1. 搭建项目骨架（pyproject.toml + 目录结构）
-2. 实现 blackbox_model.py（数据模型）
-3. 实现 genie-extract（结构提取）
-4. 实现 genie-relations（关系映射）
-5. 实现 genie-insights（SKILL 编写）
-6. 实现 genie-report（报告生成）
-7. 集成测试
-8. 打包发布
+1. ~~搭建项目骨架~~ ✅
+2. 实现 blackbox_model.py（数据模型）+ 测试
+3. 实现 extractors/（结构提取）+ 测试
+4. 实现 patterns/（关系检测）+ 测试
+5. 实现 cli.py（命令行入口）+ 测试
+6. 集成测试
+7. 打包发布
