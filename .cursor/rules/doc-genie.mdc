@@ -1,0 +1,29 @@
+---
+description: "doc-genie: Document analysis and relationship extraction"
+globs: "**/*.pdf,**/*.docx,**/*.md,**/*.py,**/*.ts,**/*.js"
+alwaysApply: false
+---
+
+# doc-genie
+
+When analyzing documents or code for system architecture:
+
+## Extraction
+
+1. Identify component boundaries (functions, classes, sections)
+2. Extract inputs (parameters, dependencies, triggers)
+3. Extract outputs (results, side effects, artifacts)
+4. Extract attributes (constraints, properties)
+
+## Relationships
+
+- Data flow: A output → B input
+- Dependency: A requires B
+- Interface: A calls B
+- Sequence: A before B
+- Constraint: A limits B
+
+## Output Format
+
+Always output structured YAML for black boxes and relationships.
+See `skills/genie-extract/OUTPUT.md` and `skills/genie-relations/OUTPUT.md`.
