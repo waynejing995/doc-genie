@@ -1,6 +1,6 @@
 ---
 
-name: boxmatrix-report
+name: bx-report
 description: >
   Generate analysis reports with Mermaid diagrams, tables, and interactive HTML dashboards.
   Use after extraction and analysis to create documentation and visualizations.
@@ -124,13 +124,13 @@ graph TD
 
 ## Insights
 
-[Include output from boxmatrix-insights if available]
+[Include output from bx-insights if available]
 
 ### Implicit Relationships
-[Table from boxmatrix-insights]
+[Table from bx-insights]
 
 ### Conflicts
-[Table from boxmatrix-insights]
+[Table from bx-insights]
 
 ### Patterns
 [Design patterns, anti-patterns, missing components]

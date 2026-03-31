@@ -1,5 +1,5 @@
 ---
-name: boxmatrix-extract
+name: bx-extract
 description: >
   Extract document sections as black boxes with inputs, outputs, and attributes.
   Supports PDF, DOCX, Markdown, and code files (Python, JS, TS, C via tree-sitter).

@@ -1,8 +1,8 @@
 ---
-name: boxmatrix-insights
+name: bx-insights
 description: >
   Deep analysis: find implicit relationships, detect conflicts, discover patterns.
-  Use after boxmatrix-extract and boxmatrix-relations to find insights rules cannot detect.
+  Use after bx-extract and bx-relations to find insights rules cannot detect.
   Triggers: deep analysis, find conflicts, implicit relationships, semantic analysis.
 ---
 

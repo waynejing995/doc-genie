@@ -90,22 +90,22 @@ uv run boxmatrix report --format html --output .genie/report.html
 
 The plugin provides four AI-powered skills:
 
-#### 1. boxmatrix-extract
+#### 1. bx-extract
 
 Extract black boxes from code or documents.
 
 ```
-Use the boxmatrix-extract skill to extract boxes from lib/config.py
+Use the bx-extract skill to extract boxes from lib/config.py
 ```
 
 **Output**: YAML file with structured boxes including inputs, outputs, and dependencies.
 
-#### 2. boxmatrix-relations
+#### 2. bx-relations
 
 Analyze relationships between components.
 
 ```
-Use the boxmatrix-relations skill to analyze relationships between lib/config.py and lib/storage/
+Use the bx-relations skill to analyze relationships between lib/config.py and lib/storage/
 ```
 
 **Relationship types**:
@@ -115,12 +115,12 @@ Use the boxmatrix-relations skill to analyze relationships between lib/config.py
 - `constraint` - A constrains B's behavior
 - `conflict` - A conflicts with B
 
-#### 3. boxmatrix-insights
+#### 3. bx-insights
 
 Discover hidden patterns, conflicts, and implicit relationships.
 
 ```
-Use the boxmatrix-insights skill to find patterns in lib/extractors/
+Use the bx-insights skill to find patterns in lib/extractors/
 ```
 
 **Finds**:
@@ -129,12 +129,12 @@ Use the boxmatrix-insights skill to find patterns in lib/extractors/
 - Missing components
 - Optimization opportunities
 
-#### 4. boxmatrix-report
+#### 4. bx-report
 
 Generate interactive HTML reports with visualizations.
 
 ```
-Use the boxmatrix-report skill to generate a full project report
+Use the bx-report skill to generate a full project report
 ```
 
 **Features**:
@@ -150,10 +150,10 @@ boxmatrix/
 ├── .claude-plugin/
 │   └── plugin.json          # Plugin manifest
 ├── skills/
-│   ├── boxmatrix-extract/   # Extraction skill
-│   ├── boxmatrix-relations/ # Relationship analysis
-│   ├── boxmatrix-insights/  # Pattern detection
-│   └── boxmatrix-report/    # Report generation
+│   ├── bx-extract/   # Extraction skill
+│   ├── bx-relations/ # Relationship analysis
+│   ├── bx-insights/  # Pattern detection
+│   └── bx-report/    # Report generation
 ├── agents/
 │   ├── extract-worker.md    # Parallel extraction
 │   ├── data-flow-agent.md   # Data flow analysis

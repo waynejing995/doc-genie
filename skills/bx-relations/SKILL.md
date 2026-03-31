@@ -1,8 +1,8 @@
 ---
-name: boxmatrix-relations
+name: bx-relations
 description: >
   Map relationships between black boxes: data flow, dependencies, calls, constraints.
-  Use after boxmatrix-extract to find connections between components.
+  Use after bx-extract to find connections between components.
   Triggers: relationship, dependency, data flow, connection, architecture.
 ---
 
